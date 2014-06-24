@@ -24,9 +24,21 @@ def report():
   c.reverse()
   del c[25:]
 
-  print "cache effect: %2.2f%%, save %.2fK of %.2fK" % (totalHitBytes/totalBytes*100, totalHitBytes/1024, totalBytes/1024)
+  ratio = totalHitBytes/totalBytes*100
+  if (totalHitBytes/1024 > 100000):
+    totalHitBytes = "{:.2f}".format(totalHitBytes/1024/1024) + "M"
+  else:
+    totalHitBytes /= 1024
+    totalHitBytes = "{:.2f}".format(totalHitBytes) + "K"
+  if (totalBytes/1024 > 100000):
+    totalBytes = "{:.2f}".format(totalBytes/1024/1024) + "M"
+  else:
+    totalBytes /= 1024
+    totalBytes = "{:.2f}".format(totalBytes) + "K"
+
+  print "cache effect: %2.2f%%, save %s of %s" % (ratio, totalHitBytes, totalBytes)
   print "most accessed sites (by traffic)"
-  print "%33s %8s  %s" % ("URL", "Kbytes", "Ratio")
+  print "%33s %8s  %s" % ("Host", "Kbytes", "Ratio")
   for h in c:
     print "%33s %8d%7.2f" % (h[0], h[1]/1024, h[2])
   #print "\n".join(map(str, c))
